@@ -5,114 +5,44 @@ import xbmcaddon
 import xbmcplugin
 import xbmcgui
 
-API_PATH = 'http://api.tested.com'
-API_KEY = 'df91891cf6c7e7475955d876926b3e9cf5a75743' # Default API key
 my_addon = xbmcaddon.Addon('plugin.video.tested')
 
 def CATEGORIES():
-    account_linked = False
-    user_api_key = my_addon.getSetting('api_key')
-    if user_api_key:
-        response = urllib2.urlopen(API_PATH + '/chats/?api_key=' + user_api_key + '&format=json')
-        data = simplejson.loads(response.read())
-        if data['status_code'] == 100:
-            # Revert to the default key
-            my_addon.setSetting('api_key', '')
-        else:
-            global API_KEY
-            API_KEY = user_api_key
-            account_linked = True
-
-    response = urllib2.urlopen(API_PATH + '/video_types/?api_key=' + API_KEY + '&format=json')
-    category_data = simplejson.loads(response.read())['results']
-    response.close()
-
     name = 'Latest'
-    url = API_PATH + '/videos/?api_key=' + API_KEY + '&sort=-publish_date&format=json'
-    iconimage = ''
+    url = 'https://gdata.youtube.com/feeds/api/users/testedcom/uploads?alt=json&prettyprint=true&v=2&max-results=20'
     addDir(name, url, 2, '')
 
-    for cat in category_data:
-        name = cat['name']
-        url = API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=' + str(cat['id']) + '&sort=-publish_date&format=json'
-        iconimage = ''
-        addDir(name, url, 2, '')
-
+    #TODO: ADD IN "ALL", CLICK PAGES TO GO FORWARD
+    
     name = 'Search'
-    iconimage = ''
     addDir(name, 'search', 1, '')
 
-    if not account_linked:
-        name = 'Link Account'
-        iconimage = ''
-        addDir(name, 'link', 1, '')
-
-def GET_API_KEY(link_code):
-    if link_code and len(link_code) == 6:
-        try:
-            response = urllib2.urlopen(API_PATH + '/validate?link_code=' + link_code + '&format=json')
-            data = simplejson.loads(response.read())
-            new_api_key = data['api_key']
-            my_addon.setSetting('api_key', new_api_key)
-            return True
-        except:
-            return False
-    else:
-        return False
 
 def INDEX(url):
-    if my_addon.getSetting('api_key'):
-        global API_KEY
-        API_KEY = my_addon.getSetting('api_key')
-
     if url == 'search':
         keyboard = xbmc.Keyboard("", 'Search', False)
         keyboard.doModal()
         if keyboard.isConfirmed():
             query = keyboard.getText().replace(' ', '%20')
-            url = API_PATH + '/search/?api_key=' + API_KEY + '&resources=video&query=' + query + '&format=json'
+            url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&q=' + query
             VIDEOLINKS(url, 'search')
 
-    elif url == 'link':
-        dialog = xbmcgui.Dialog()
-        ok = dialog.ok("Let's do this.", "To link your account, visit", "www.tested.com/xbmc to get a link code.", "Enter this code on the next screen.")
-
-        keyboard = xbmc.Keyboard("", 'Enter your link code.', False)
-        keyboard.doModal()
-        if keyboard.isConfirmed():
-            link_code = keyboard.getText().upper()
-            if GET_API_KEY(link_code):
-                ok = dialog.ok("Success!", "Your account is now linked!", "If you are a premium member,", "you should now have premium privileges.")
-            else:
-                ok = dialog.ok("We're really sorry, but...", "We could not link your account.", "Make sure the code you entered is correct", "and try again.")
-            CATEGORIES()
-
 def VIDEOLINKS(url, name):
-    if my_addon.getSetting('api_key'):
-        global API_KEY
-        API_KEY = my_addon.getSetting('api_key')
-
-    q_setting = int(my_addon.getSetting('quality'))
-    quality = None
-    if q_setting == 1:
-        quality = 'low_url'
-    elif q_setting == 2:
-        quality = 'high_url'
-
     response = urllib2.urlopen(url)
-    video_data = simplejson.loads(response.read())['results']
+    video_data = simplejson.loads(response.read())
     response.close()
 
-    for vid in video_data:
-        name = vid['name']
-        if not quality:
-            if 'hd_url' in vid:
-                url = vid['hd_url'] + '&api_key=' + API_KEY
-            else:
-                url = vid['high_url']
-        else:
-            url = vid[quality]
-        thumbnail = vid['image']['super_url']
+    for vid in video_data['feed']['entry']:
+        name = vid['title']['$t']
+        
+        url = 'plugin://plugin.video.youtube/?action=play_video&quality=720p&videoid=' + vid['media$group']['yt$videoid']['$t'] # to flash file, need to download it I guess?
+
+        # Try to get the HD Thumbnail, if you cant than just grab the default one
+        try:
+            thumbnail = vid['media$group']['media$thumbnail'][2]['url']
+        except:
+            thumbnail = vid['media$group']['media$thumbnail'][0]['url']
+        
         addLink(name,url,thumbnail)
 
 def get_params():
@@ -138,6 +68,8 @@ def addLink(name, url, iconimage):
     liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
     liz.setInfo( type="Video", infoLabels={ "Title": name } )
     liz.setProperty("fanart_image", my_addon.getAddonInfo('path') + "/fanart.jpg")
+    liz.setProperty( "Video", "true" )
+    liz.setProperty( "IsPlayable", "true")
     ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
     return ok
 
