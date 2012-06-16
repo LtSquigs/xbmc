@@ -13,7 +13,46 @@ def CATEGORIES():
     addDir(name, url, 2, '')
 
     #TODO: ADD IN "ALL", CLICK PAGES TO GO FORWARD
+    name = 'Science & Technology'
+    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=Tech'
+    addDir(name, url, 2, '')
+	
+    name = 'Reviews'
+    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=review'
+    addDir(name, url, 2, '')
+	
+    name = 'App Of The Day'
+    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=app,of,the,day'
+    addDir(name, url, 2, '')
     
+    name = 'Games'
+    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=games'
+    addDir(name, url, 2, '')
+    
+    name = 'DIY'
+    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=diy'
+    addDir(name, url, 2, '')
+	
+    name = 'Coffee'
+    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=coffee'
+    addDir(name, url, 2, '')
+	
+    name = 'Quick Looks'
+    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=Quick,Look'
+    addDir(name, url, 2, '')
+	
+    name = 'Howtos'
+    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=howto'
+    addDir(name, url, 2, '')
+	
+    name = 'Makerbot'
+    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=makerbot'
+    addDir(name, url, 2, '')
+	
+    name = 'Funny'
+    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=funny'
+    addDir(name, url, 2, '')
+	
     name = 'Search'
     addDir(name, 'search', 1, '')
 
