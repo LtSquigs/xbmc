@@ -8,53 +8,44 @@ import xbmcgui
 my_addon = xbmcaddon.Addon('plugin.video.tested')
 
 def CATEGORIES():
+
+    iconPath = my_addon.getAddonInfo('path') + '\\icons\\'
+
     name = 'Latest'
     url = 'https://gdata.youtube.com/feeds/api/users/testedcom/uploads?alt=json&prettyprint=true&v=2&max-results=20'
-    addDir(name, url, 2, '')
+    addDir(name, url, 2, iconPath + "latest.png")
 
     #TODO: ADD IN "ALL", CLICK PAGES TO GO FORWARD
     name = 'Science & Technology'
     url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=Tech'
-    addDir(name, url, 2, '')
+    addDir(name, url, 2,  iconPath + "science.png")
 	
     name = 'Reviews'
     url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=review'
-    addDir(name, url, 2, '')
+    addDir(name, url, 2,  iconPath + "review.png")
 	
     name = 'App Of The Day'
     url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=app,of,the,day'
-    addDir(name, url, 2, '')
-    
-    name = 'Games'
-    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=games'
-    addDir(name, url, 2, '')
+    addDir(name, url, 2,  iconPath + "app-of-the-day.png")
     
     name = 'DIY'
     url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=diy'
-    addDir(name, url, 2, '')
+    addDir(name, url, 2,  iconPath + "diy.png")
 	
     name = 'Coffee'
     url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=coffee'
-    addDir(name, url, 2, '')
-	
-    name = 'Quick Looks'
-    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=Quick,Look'
-    addDir(name, url, 2, '')
+    addDir(name, url, 2,  iconPath + "coffee.png")
 	
     name = 'Howtos'
     url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=howto'
-    addDir(name, url, 2, '')
+    addDir(name, url, 2,  iconPath + "howto.png")
 	
     name = 'Makerbot'
     url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=makerbot'
-    addDir(name, url, 2, '')
-	
-    name = 'Funny'
-    url = 'http://gdata.youtube.com/feeds/api/videos?alt=json&author=testedcom&prettyprint=true&v=2&max-results=50&orderby=published&category=funny'
-    addDir(name, url, 2, '')
+    addDir(name, url, 2,  iconPath + "makerbot.png")
 	
     name = 'Search'
-    addDir(name, 'search', 1, '')
+    addDir(name, 'search', 1,  iconPath + "search.png")
 
 
 def INDEX(url):
@@ -106,7 +97,7 @@ def addLink(name, url, iconimage):
     ok=True
     liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
     liz.setInfo( type="Video", infoLabels={ "Title": name } )
-    liz.setProperty("fanart_image", my_addon.getAddonInfo('path') + "/fanart.jpg")
+    liz.setProperty("fanart_image", my_addon.getAddonInfo('path') + "/art.png")
     liz.setProperty( "Video", "true" )
     liz.setProperty( "IsPlayable", "true")
     ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
@@ -117,7 +108,7 @@ def addDir(name, url, mode, iconimage):
     ok=True
     liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
     liz.setInfo( type="Video", infoLabels={ "Title": name } )
-    liz.setProperty("fanart_image", my_addon.getAddonInfo('path') + "/fanart.jpg")
+    liz.setProperty("fanart_image", my_addon.getAddonInfo('path') + "/art.png")
     ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
     return ok
 
